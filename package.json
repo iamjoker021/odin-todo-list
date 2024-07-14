@@ -1,0 +1,19 @@
+{
+  "name": "odin-todo-list",
+  "version": "1.0.0",
+  "description": "TheOdinProject to build a To-Do List",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamjoker021/odin-todo-list.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamjoker021/odin-todo-list/issues"
+  },
+  "homepage": "https://github.com/iamjoker021/odin-todo-list#readme"
+}
