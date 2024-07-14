@@ -1,25 +1,5 @@
-const createProject = (name, description) => {
-    if (!name) {
-        return ;
-    }
-    let projectName = name;
-    let projectDescription = description || 'Nil';
-    let todoList = {}
-
-    const getProjectName = () => projectName;
-    const setProjectName = (name) => {projectName = name};
-
-    const getProjectDescription = () => projectDescription;
-    const setProjectDescription = (description) => {projectDescription = description}
-
-    const getToDoList = () => todoList;
-    const addTodo = (todo) => {todoList.push(todo)};
-    const removeToDo = (todoId) => {
-        todoList = todoList.filter((todo) => todo.id!= todoId)
-    };
-
-    return { getProjectName, setProjectName, getProjectDescription, setProjectDescription, getToDoList, addTodo, removeToDo }
-}
+import { ManageStorage } from "./manage-storage";
+import { createProject } from "./project-entity";
 
 const projectFolderManager = () => {
     let { maxId: id, projectFolder } = ManageStorage.getLocalStorageValue();
@@ -59,39 +39,6 @@ const projectFolderManager = () => {
 
     return { addProject, removeProject, getProjectList }
 }
-
-const ManageStorage = (() => {
-    const getLocalStorageValue = () => {
-        // De-Serialize
-        const storedValue = JSON.parse(localStorage.getItem('projectFolder')) || {maxId: 0, projectFolder: {}}
-        const projectFolder = storedValue.projectFolder;
-        for (const project in projectFolder) {
-            projectFolder[project] = createProject(projectFolder[project].name, projectFolder[project].description);
-            
-            for (const todo in projectFolder[project].todo) {
-                projectFolder[project].addTodo(todo);
-            }
-        }
-
-        return storedValue
-    };
-    const save = (tobeStored) => {
-        // Serialize
-        const projectFolder = tobeStored.projectFolder;
-        for (const project in projectFolder) {
-            projectFolder[project]['name'] = projectFolder[project].getProjectName();
-            projectFolder[project]['description'] = projectFolder[project].getProjectDescription();
-            projectFolder[project]['todo'] = {};
-            for (const todo in projectFolder[project].getToDoList()) {
-                projectFolder[project]['todo'][todo] = todo
-            }
-        }
-        
-        localStorage.setItem('projectFolder', JSON.stringify(tobeStored));
-    }
-
-    return { getLocalStorageValue, save }
-})();
 
 export {
     projectFolderManager
