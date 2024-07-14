@@ -1,10 +1,12 @@
+import { createToDo } from "./todo-entity";
+
 const createProject = (name, description) => {
     if (!name) {
-        return ;
+        return false;
     }
     let projectName = name;
     let projectDescription = description || 'Nil';
-    let todoList = {}
+    let todoList = [];
 
     const getProjectName = () => projectName;
     const setProjectName = (name) => {projectName = name};
@@ -13,9 +15,18 @@ const createProject = (name, description) => {
     const setProjectDescription = (description) => {projectDescription = description}
 
     const getToDoList = () => todoList;
-    const addTodo = (todo) => {todoList.push(todo)};
-    const removeToDo = (todoId) => {
-        todoList = todoList.filter((todo) => todo.id!= todoId)
+    const addTodo = (name, description, dueDate, priority) => {
+        if(!name){
+            return false;
+        }
+        const todo = createToDo(name, description, dueDate, priority);
+        todoList.push(todo);
+        return true;
+    };
+
+    const removeToDo = (index) => {
+        const removedItem = todoList.splice(index, 1);
+        return removedItem;
     };
 
     return { getProjectName, setProjectName, getProjectDescription, setProjectDescription, getToDoList, addTodo, removeToDo }

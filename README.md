@@ -11,11 +11,10 @@ Project:
 - [x] Project have Name, Descrition
 - [x] List Project Folders
 - [x] Able to create/update/remove project folder
-- [] Alert on DELETE of Project folder, ask user if we can delete all the to-list as well/move them to default folder
+- [] Alert on DELETE of Project folder, ask user if we can DELETE
 
 To-Do:
-- [] Every to-do item have a title, description, dueDate, priority, notes, created_date, updated_at
+- [] Every to-do item have a title, description, dueDate, priority
 - [] List the To-Do List
-- [] A todo-item can have mutiple child to-do items
 - [] Able to create/update/delete the To-Do Items inidividually
 - [] Can move the To-Do across the projects
