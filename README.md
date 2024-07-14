@@ -7,10 +7,10 @@ To build a ToDo List using HTML, CSS, HS
 ## Functionality to be added
 
 Project: 
-- [] Project folder to group the todo-list.
-- [] Project have Name, Descrition
-- [] List Project Folders
-- [] Able to create/update/remove project folder
+- [x] Project folder to group the todo-list.
+- [x] Project have Name, Descrition
+- [x] List Project Folders
+- [x] Able to create/update/remove project folder
 - [] Alert on DELETE of Project folder, ask user if we can delete all the to-list as well/move them to default folder
 
 To-Do:
