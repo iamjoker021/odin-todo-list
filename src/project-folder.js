@@ -11,6 +11,7 @@ import { createProject } from "./project-entity";
         }
         const project = createProject(name, description);
         projectFolder[nextId()] = project;
+        return true;
     }
 
     const removeProject = (projectId) => {

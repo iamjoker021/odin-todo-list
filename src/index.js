@@ -6,6 +6,13 @@ const ScreenController = () => {
     // Get Data
     const data = ManageStorage.getLocalStorageValue();
     const projectManager = projectFolderManager(data.id, data.projectFolder);
+
+    const clearScreen = () => {
+        const projectContainer = document.querySelector('div.cards');
+        while (projectContainer.firstChild) {
+            projectContainer.removeChild(projectContainer.firstChild);
+        }
+    }
     
     const listProjectFolder = () => {
     /*
@@ -80,10 +87,71 @@ const ScreenController = () => {
         }
     }
 
-    return { listProjectFolder }
+    // Add Project Folder
+    const addProject = () => {
+        const projectContainer = document.querySelector('div.cards');
+
+        const projectCard = document.createElement('div');
+        projectCard.classList.add('card');
+        projectCard.classList.add('project-folder');
+        projectContainer.appendChild(projectCard);
+
+        const projectForm = document.createElement('form');
+        projectCard.appendChild(projectForm);
+
+        const title = document.createElement('h4');
+        projectForm.appendChild(title);
+        const titleInput = document.createElement('input');
+        titleInput.name = 'projectName';
+        titleInput.id = 'projectName';
+        titleInput.type = 'text';
+        titleInput.placeholder = 'NAME of Project'
+        titleInput.required = true;
+        title.appendChild(titleInput);
+        
+        const description = document.createElement('p');
+        projectForm.appendChild(description);
+        const descriptionInput = document.createElement('input');
+        descriptionInput.name = 'projectDescription';
+        descriptionInput.id = 'projectDescription';
+        descriptionInput.type = 'text';
+        descriptionInput.placeholder = 'Description of your Project';
+        descriptionInput.required = true;
+        description.appendChild(descriptionInput);
+
+        const submitButton = document.createElement('button');
+        submitButton.type = 'submit';
+        submitButton.textContent = 'OK';
+        projectForm.appendChild(submitButton);
+
+        projectForm.addEventListener('submit', (e) => {
+            const formData = {
+                name: document.querySelector('#projectName').value,
+                description: document.querySelector('#projectDescription').value
+            };
+            if(!projectManager.addProject(formData.name, formData.description)) {
+                alert('Sorry, Failed to add Project');
+            };
+            clearScreen();
+            listProjectFolder();
+            e.preventDefault();
+        })
+    }
+
+
+    // Home
+    document.querySelector('.logo').addEventListener('click', () => {
+        listProjectFolder();
+    })
+
+    // Create Project
+    document.querySelector('.create-project').addEventListener('click', (e) => {
+        addProject();
+    })
 }
 
-ScreenController().listProjectFolder();
+ScreenController();
+document.querySelector('.logo').click();
 
 // To test in console
 Window.ManageStorage = ManageStorage;
