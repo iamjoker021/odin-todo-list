@@ -4,7 +4,7 @@ const STORAGE_FOLDER = 'projectFolder';
 const ManageStorage = (() => {
     const getLocalStorageValue = () => {
         if (!localStorage.getItem(STORAGE_FOLDER)) {
-            return {id: 0, projectFolder: {}};
+            return JSON.parse('{"id":1,"projectFolder":{"0":{"name":"default","description":"The default to-do folder","todo":[{"name":"sample-todo","description":"this is sample todo","dueDate":1721100556529,"priority":3}]}}}');
         }
 
         // De-Serialize
