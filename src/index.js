@@ -8,6 +8,7 @@ const ScreenController = () => {
     const projectManager = projectFolderManager(data.id, data.projectFolder);
 
     const clearScreen = () => {
+        ManageStorage.save();
         const projectContainer = document.querySelector('div.cards');
         while (projectContainer.firstChild) {
             projectContainer.removeChild(projectContainer.firstChild);
@@ -87,6 +88,58 @@ const ScreenController = () => {
                 projectManager.removeProject(index);
                 clearScreen();
                 document.querySelector('.logo').click();
+            })
+
+            editButton.addEventListener('click', () => {
+                const projectForm = document.createElement('form');
+                projectCard.appendChild(projectForm);
+
+                const title = document.createElement('h4');
+                projectForm.appendChild(title);
+                const titleInput = document.createElement('input');
+                titleInput.name = 'projectName';
+                titleInput.id = 'projectName';
+                titleInput.type = 'text';
+                titleInput.placeholder = 'NAME of Project'
+                titleInput.required = true;
+                titleInput.value = project.getProjectName();
+                title.appendChild(titleInput);
+                
+                const description = document.createElement('p');
+                projectForm.appendChild(description);
+                const descriptionInput = document.createElement('input');
+                descriptionInput.name = 'projectDescription';
+                descriptionInput.id = 'projectDescription';
+                descriptionInput.type = 'text';
+                descriptionInput.placeholder = 'Description of your Project';
+                descriptionInput.required = true;
+                descriptionInput.value = project.getProjectDescription();
+                description.appendChild(descriptionInput);
+
+                const submitButton = document.createElement('button');
+                submitButton.type = 'submit';
+                submitButton.textContent = 'OK';
+                projectForm.appendChild(submitButton);
+
+                projectForm.addEventListener('submit', (e) => {
+                    const formData = {
+                        name: e.target.querySelector('#projectName').value,
+                        description: e.target.querySelector('#projectDescription').value
+                    };
+                    project.setProjectName(formData.name);
+                    project.setProjectDescription(formData.description);
+
+                    e.preventDefault();
+
+                    clearScreen();
+                    document.querySelector('.logo').click();
+                })
+                
+                while (projectCard.firstChild) {
+                    projectCard.removeChild(projectCard.firstChild);
+                }
+
+                projectCard.appendChild(projectForm);
             })
         }
     }
