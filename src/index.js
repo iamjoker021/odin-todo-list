@@ -83,7 +83,11 @@ const ScreenController = () => {
                                 </svg>`;
             deleteItem.appendChild(deleteButton);
 
-            
+            deleteButton.addEventListener('click', () => {
+                projectManager.removeProject(index);
+                clearScreen();
+                document.querySelector('.logo').click();
+            })
         }
     }
 
