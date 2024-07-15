@@ -21,7 +21,7 @@ body {
     margin: 5% auto;
 }
 
-button {
+header button {
     padding: 8px 24px;
     border-radius: 50px;
     background-color: brown;
@@ -29,11 +29,23 @@ button {
     font-weight: 700;
 }
 
-div.project {
+div.card {
     background-color: bisque;
     border: 1px solid brown;
     border-radius: 15px;
     padding: 1%;
+}
+
+ul {
+    list-style: none;
+}
+
+header {
+    margin: 1%;
+}
+
+button, a, div.project-folder > h4 {
+    cursor: pointer;
 }
 
 /* Layout */
@@ -47,13 +59,22 @@ header {
     justify-content: space-between;
 }
 
-div.projects {
+ul {
+    display: flex;
+    gap: 16px;
+}
+
+div.cards {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
     overflow: auto;
 }
 
-div.project {
+div.card {
     flex: 1;
+}
+
+ul.card-edit {
+    justify-content: right;
 }
