@@ -4,7 +4,56 @@
     box-sizing: border-box;
 }
 
+/* Styles */
+
 body {
-    background-color: black;
+    background-image: url("https://media.istockphoto.com/id/1341348395/photo/old-dark-brown-wooden-board.jpg?s=1024x1024&w=is&k=20&c=QNyV9qwjNTwpOWbDKQx9Dr-uYgEJrmBR2TU6sSUPJh8=");
+    background-size: cover;
+    background-position: center;
+}
+
+.wrapper {
+    background-color: burlywood;
+    border-radius: 15px;
+    padding: 1%;
+    height: 80%;
+    width: 70%;
+    margin: 5% auto;
+}
+
+button {
+    padding: 8px 24px;
+    border-radius: 50px;
+    background-color: brown;
     color: white;
+    font-weight: 700;
+}
+
+div.project {
+    background-color: bisque;
+    border: 1px solid brown;
+    border-radius: 15px;
+    padding: 1%;
+}
+
+/* Layout */
+
+html, body {
+    height: 100%;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+div.projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    overflow: auto;
+}
+
+div.project {
+    flex: 1;
 }
