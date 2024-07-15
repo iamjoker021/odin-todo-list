@@ -44,7 +44,6 @@ const ScreenController = () => {
         const projectContainer = document.querySelector('div.cards');
         
         const projectList = projectManager.getProjectList();
-        console.log(projectList);
         for (const index in projectList) {
             const project = projectList[index]
             const projectCard = document.createElement('div');
@@ -84,6 +83,7 @@ const ScreenController = () => {
                                 </svg>`;
             deleteItem.appendChild(deleteButton);
 
+            
         }
     }
 
@@ -126,26 +126,30 @@ const ScreenController = () => {
 
         projectForm.addEventListener('submit', (e) => {
             const formData = {
-                name: document.querySelector('#projectName').value,
-                description: document.querySelector('#projectDescription').value
+                name: e.target.querySelector('#projectName').value,
+                description: e.target.querySelector('#projectDescription').value
             };
             if(!projectManager.addProject(formData.name, formData.description)) {
                 alert('Sorry, Failed to add Project');
             };
-            clearScreen();
-            listProjectFolder();
             e.preventDefault();
+
+            clearScreen();
+            document.querySelector('.logo').click();
         })
     }
 
 
     // Home
     document.querySelector('.logo').addEventListener('click', () => {
+        document.querySelector('button.back-button').disabled = true;
+        document.querySelector('button.create-project').disabled = false;
         listProjectFolder();
     })
 
     // Create Project
     document.querySelector('.create-project').addEventListener('click', (e) => {
+        document.querySelector('button.create-project').disabled = true;
         addProject();
     })
 }
