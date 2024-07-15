@@ -8,7 +8,7 @@ const ScreenController = () => {
     const projectManager = projectFolderManager(data.id, data.projectFolder);
 
     const clearScreen = () => {
-        ManageStorage.save();
+        ManageStorage.save(projectManager);
         const projectContainer = document.querySelector('div.cards');
         while (projectContainer.firstChild) {
             projectContainer.removeChild(projectContainer.firstChild);
