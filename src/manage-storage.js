@@ -1,14 +1,17 @@
 import { createProject } from "./project-entity";
 
+const STORAGE_FOLDER = 'projectFolder';
 const ManageStorage = (() => {
     const getLocalStorageValue = () => {
-        // De-Serialize
-        if (!localStorage.getItem('projectFolder')) {
-            localStorage.setItem('projectFolder', {id: 0, projectFolder: {}})
+        if (!localStorage.getItem(STORAGE_FOLDER)) {
+            return {id: 0, projectFolder: {}};
         }
-        const storedValue = JSON.parse(localStorage.getItem('projectFolder'))
+
+        // De-Serialize
+        const storedValue = JSON.parse(localStorage.getItem(STORAGE_FOLDER))
         const projectFolder = storedValue.projectFolder;
         
+        const parsedStoredProjectFolder = {}
         for (const project in projectFolder) {
             const projectObj = createProject(projectFolder[project].name, projectFolder[project].description);
             
@@ -16,10 +19,10 @@ const ManageStorage = (() => {
                 projectObj.addTodo(todo.name, todo.description, todo.dueDate, todo.priority);
             }
 
-            projectFolder[project] = projectObj;
+            parsedStoredProjectFolder[project] = projectObj
         }
 
-        return storedValue
+        return {id: storedValue.id, projectFolder: parsedStoredProjectFolder}
     };
 
     const save = (projectManager) => {
@@ -45,7 +48,7 @@ const ManageStorage = (() => {
             }
         }
         
-        localStorage.setItem('projectFolder', JSON.stringify(tobeStored));
+        localStorage.setItem(STORAGE_FOLDER, JSON.stringify(tobeStored));
     };
 
     return { getLocalStorageValue, save }

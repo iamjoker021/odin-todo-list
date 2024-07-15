@@ -1,4 +1,4 @@
-const ONE_DAY = 6*24*60*60*1000
+const ONE_DAY = 24*60*60*1000;
 
 const createToDo = (todoName, todoDescription, todoDueDate, todoPriority) => {
     if (!todoName) {
@@ -21,7 +21,7 @@ const createToDo = (todoName, todoDescription, todoDueDate, todoPriority) => {
 
     const getDuedate = () => new Date(dueDate);
     const extendDuedate = (noOfDays) => {
-        dueDate = dueDate.getTime + (noOfDays * ONE_DAY);
+        dueDate = dueDate + (noOfDays * ONE_DAY);
     }
 
     const getPriority = () => priority;
