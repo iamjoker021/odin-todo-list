@@ -200,6 +200,12 @@ const ScreenController = () => {
     // Home
     document.querySelector('.logo').addEventListener('click', () => {
         document.querySelector('button.back-button').disabled = true;
+
+        const createButton = document.querySelector('header > ul > li > button');
+        for (const cls of createButton.classList) {
+            createButton.classList.remove(cls);
+        }
+        createButton.classList.add('create-project');
         document.querySelector('button.create-project').disabled = false;
         listProjectFolder();
     })
