@@ -48,6 +48,10 @@ button, a, div.project-folder > h4 {
     cursor: pointer;
 }
 
+.content-info {
+    margin: 8px auto;
+}
+
 /* Layout */
 
 html, body {
