@@ -48,12 +48,8 @@ button, a, div.project-folder > h4 {
     cursor: pointer;
 }
 
-h2 {
-    margin: 16px 0;
-}
-
-.priority {
-    color: red;
+.content-info {
+    margin: 8px auto;
 }
 
 /* Layout */

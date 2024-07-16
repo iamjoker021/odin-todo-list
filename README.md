@@ -16,4 +16,4 @@ Project:
 To-Do:
 - [x] Every to-do item have a title, description, dueDate, priority
 - [x] List the To-Do List
-- [x] Able to create/update/delete the To-Do Items inidividually
+- [x] Able to create/delete the To-Do Items inidividually

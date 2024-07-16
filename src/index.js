@@ -16,32 +16,6 @@ const ScreenController = () => {
     }
     
     const listProjectFolder = () => {
-    /*
-    <div class="card project-folder">
-        <h4>list 1</h4>
-        <p>some description 1</p>
-        <ul class="card-edit">
-            <li>
-                <button>
-                    <?xml version="1.0" encoding="utf-8"?>
-                    <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20.1498 7.93997L8.27978 19.81C7.21978 20.88 4.04977 21.3699 3.32977 20.6599C2.60977 19.9499 3.11978 16.78 4.17978 15.71L16.0498 3.84C16.5979 3.31801 17.3283 3.03097 18.0851 3.04019C18.842 3.04942 19.5652 3.35418 20.1004 3.88938C20.6356 4.42457 20.9403 5.14781 20.9496 5.90463C20.9588 6.66146 20.6718 7.39189 20.1498 7.93997V7.93997Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-            </li>
-            <li>
-                <button>
-                    <?xml version="1.0" encoding="utf-8"?>
-                    <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 7H20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M6 7V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-            </li>
-        </ul>
-    </div> 
-    */
         const projectContainer = document.querySelector('div.cards');
         
         const projectList = projectManager.getProjectList();
@@ -142,13 +116,7 @@ const ScreenController = () => {
             })
 
             title.addEventListener('click', () => {
-                document.querySelector('button.back-button').disabled = false;
-                document.querySelector('.content-name').textContent = projectManager.getProjectList()[index].getProjectName();
-                document.querySelector('header > ul > li > button').classList.add('create-todo');
-                document.querySelector('header > ul > li > button').classList.remove('create-project');
-                document.querySelector('button.create-todo').disabled = false;
-                clearScreen();
-                listTodoItems(index);
+                todoSetup(index);
             })
         }
     }
@@ -205,10 +173,12 @@ const ScreenController = () => {
         })
     }
 
+    // List To Do 
     const listTodoItems = (projectId) => {
         const todoContainer = document.querySelector('div.cards');
 
-        const todoList = projectManager.getProjectList()[projectId].getToDoList();
+        const project = projectManager.getProjectList()[projectId]
+        const todoList = project.getToDoList();
         for (let index=0; index<todoList.length; index++) {
             const todo = todoList[index];
             const todoCard = document.createElement('div');
@@ -226,12 +196,12 @@ const ScreenController = () => {
             todoCard.appendChild(description);
 
             const dueDate = document.createElement('p');
-            const hoursDiff = Math.round((todo.getDuedate() - new Date())/36e5);
+            const hoursDiff = Math.round((todo.getDuedate() - new Date())/(24 * 36e5));
             if (hoursDiff >= 0) {
-                dueDate.textContent = `${hoursDiff} hours left`;
+                dueDate.textContent = `${hoursDiff} days left`;
             }
             else {
-                dueDate.textContent = `${hoursDiff * -1} hours ago`;
+                dueDate.textContent = `${hoursDiff * -1} days ago`;
             }
             todoCard.appendChild(dueDate);
 
@@ -244,15 +214,6 @@ const ScreenController = () => {
             buttonList.classList.add('card-edit');
             todoCard.appendChild(buttonList);
 
-            const edit = document.createElement('li');
-            buttonList.appendChild(edit);
-            const editButton = document.createElement('button');
-            editButton.innerHTML = `<?xml version="1.0" encoding="utf-8"?>
-                                <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20.1498 7.93997L8.27978 19.81C7.21978 20.88 4.04977 21.3699 3.32977 20.6599C2.60977 19.9499 3.11978 16.78 4.17978 15.71L16.0498 3.84C16.5979 3.31801 17.3283 3.03097 18.0851 3.04019C18.842 3.04942 19.5652 3.35418 20.1004 3.88938C20.6356 4.42457 20.9403 5.14781 20.9496 5.90463C20.9588 6.66146 20.6718 7.39189 20.1498 7.93997V7.93997Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>`;
-            edit.appendChild(editButton);
-
             const deleteItem = document.createElement('li');
             buttonList.appendChild(deleteItem);
             const deleteButton = document.createElement('button');
@@ -263,6 +224,12 @@ const ScreenController = () => {
                                 <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>`;
             deleteItem.appendChild(deleteButton);
+
+            deleteButton.addEventListener('click', () => {
+                project.removeToDo(index);
+                clearScreen();
+                todoSetup(projectId);
+            })
         }
     }
 
@@ -302,20 +269,19 @@ const ScreenController = () => {
         const dueDateInput = document.createElement('input');
         dueDateInput.name = 'todoDueDate';
         dueDateInput.id = 'todoDueDate';
-        dueDateInput.type = 'text';
+        dueDateInput.type = 'date';
         dueDateInput.placeholder = 'Please fill Due Date';
         dueDateInput.required = true;
         dueDate.appendChild(dueDateInput);
 
-        const priority = document.createElement(p);
+        const priority = document.createElement('p');
         todoForm.appendChild(priority);
         const priorityInput = document.createElement('input');
         priorityInput.name = 'todoPriority';
         priorityInput.id = 'todoPriority';
         priorityInput.type = 'number';
-        priorityInput.placeholder = 'Please fill Priority';
+        priorityInput.placeholder = 'Please fill Priority (0-Highest, 5-Lowest)';
         priorityInput.required = true;
-        priorityInput.value = 3;
         priorityInput.min = 0;
         priorityInput.max = 5;
         priorityInput.step = 1;
@@ -330,57 +296,54 @@ const ScreenController = () => {
             const formData = {
                 name: e.target.querySelector('#todoName').value,
                 description: e.target.querySelector('#todoDescription').value,
-                dueDate: e.target.querySelector('#todoDueDate').value,
+                dueDate: new Date(e.target.querySelector('#todoDueDate').value).getTime(),
                 priority: e.target.querySelector('#todoPriority').value,
             };
-            console.log(formData);
-            // if(!projectManager.getProjectList()[projectId].addTodo(formData.name, formData.description, formData.dueDate, formData.priority)) {
-            //     alert('Sorry, Failed to add Todo');
-            // };
+            
+            if(!projectManager.getProjectList()[projectId].addTodo(formData.name, formData.description, formData.dueDate, formData.priority)) {
+                alert('Sorry, Failed to add Todo');
+            };
             e.preventDefault();
 
             clearScreen();
-            listTodoItems(projectId);
-            document.querySelector('button.create-todo').disabled = false;
+            todoSetup(projectId);
         })
     }
 
+    // Set Up for To Do
+    const todoSetup = (projectId) => {
+        const project = projectManager.getProjectList()[projectId];
+        document.querySelector('button.back-button').disabled = false;
+
+        const createButton = document.querySelector('button.create-button');
+        createButton.classList.add('create-todo');
+        createButton.classList.remove('create-project');
+        createButton.disabled = false;
+
+        const contentInfo = document.querySelector('.content-info')
+        contentInfo.textContent = project.getProjectName();
+        contentInfo.dataset.project = projectId;
+
+        clearScreen();
+        listTodoItems(projectId);
+    }
 
     // Home
     document.querySelector('.logo').addEventListener('click', () => {
         document.querySelector('button.back-button').disabled = true;
 
-        document.querySelector('.content-name').textContent = 'Project Folder';
+        const createButton = document.querySelector('button.create-button');
+        createButton.classList.add('create-project');
+        createButton.classList.remove('create-todo');
+        createButton.disabled = false;
 
-        document.querySelector('header > ul > li > button').classList.remove('create-todo');
-        document.querySelector('header > ul > li > button').classList.add('create-project');
-        document.querySelector('button.create-project').disabled = false;
+        const contentInfo = document.querySelector('.content-info');
+        contentInfo.textContent = 'Project Folders';
+        delete contentInfo.dataset.project;
+
+
         clearScreen();
         listProjectFolder();
-    })
-
-    // Create Project
-    document.querySelector('.create-button').addEventListener('click', (e) => {
-        document.querySelector('button.create-button').disabled = true;
-        if( e.target.classList[1] === 'create-project') {
-            addProject();
-        }
-        else if (e.target.classList[1] === 'create-todo') {
-            addTodo(e.target.id);
-        }
-    })
-
-    document.querySelector('.delete-button').addEventListener('click', () => {
-        const [category, index] = e.target.dataset.index.split('-');
-        console.log(e.target.dataset.index.split('-'));
-        if (category === 'project') {
-            projectManager.removeProject(index);
-        }
-        else if (category === 'todo') {
-projectManager.removeProject(index);
-        }
-        clearScreen();
-        document.querySelector('.logo').click();
     })
 
     // Back Button
@@ -388,6 +351,18 @@ projectManager.removeProject(index);
         document.querySelector('.logo').click();
     })
 
+    // Create Project
+    document.querySelector('.create-button').addEventListener('click', (e) => {
+        const createButton = document.querySelector('button.create-button')
+        createButton.disabled = true;
+        if (createButton.classList[1] === 'create-project') {
+            addProject();
+        }
+        else if (createButton.classList[1] === 'create-todo') {
+            const projectId = document.querySelector('.content-info').dataset.project;
+            addTodo(projectId);
+        }
+    })
 }
 
 ScreenController();
