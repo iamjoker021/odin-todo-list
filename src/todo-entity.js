@@ -26,7 +26,7 @@ const createToDo = (todoName, todoDescription, todoDueDate, todoPriority) => {
 
     const getPriority = () => priority;
     const setPriority = (newPriority) => {
-        if (newPriority >= 0 && newPriority <= 10 && parseInt(newPriority)) {
+        if (newPriority >= 0 && newPriority <= 5 && parseInt(newPriority)) {
             priority = newPriority
         }
     }

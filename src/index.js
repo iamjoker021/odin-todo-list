@@ -50,6 +50,7 @@ const ScreenController = () => {
             const projectCard = document.createElement('div');
             projectCard.classList.add('card');
             projectCard.classList.add('project-folder');
+            projectCard.dataset.index = `project-${index}`;
             projectContainer.appendChild(projectCard);
 
             const title = document.createElement('h4');
@@ -67,6 +68,8 @@ const ScreenController = () => {
             const edit = document.createElement('li');
             buttonList.appendChild(edit);
             const editButton = document.createElement('button');
+            editButton.classList.add('edit-button');
+            editButton.dataset.index = `project-${index}`;
             editButton.innerHTML = `<?xml version="1.0" encoding="utf-8"?>
                                 <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M20.1498 7.93997L8.27978 19.81C7.21978 20.88 4.04977 21.3699 3.32977 20.6599C2.60977 19.9499 3.11978 16.78 4.17978 15.71L16.0498 3.84C16.5979 3.31801 17.3283 3.03097 18.0851 3.04019C18.842 3.04942 19.5652 3.35418 20.1004 3.88938C20.6356 4.42457 20.9403 5.14781 20.9496 5.90463C20.9588 6.66146 20.6718 7.39189 20.1498 7.93997V7.93997Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -76,6 +79,8 @@ const ScreenController = () => {
             const deleteItem = document.createElement('li');
             buttonList.appendChild(deleteItem);
             const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.dataset.index = `project-${index}`;
             deleteButton.innerHTML = `<?xml version="1.0" encoding="utf-8"?>
                                 <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M4 7H20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -83,12 +88,6 @@ const ScreenController = () => {
                                 <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>`;
             deleteItem.appendChild(deleteButton);
-
-            deleteButton.addEventListener('click', () => {
-                projectManager.removeProject(index);
-                clearScreen();
-                document.querySelector('.logo').click();
-            })
 
             editButton.addEventListener('click', () => {
                 const projectForm = document.createElement('form');
@@ -140,6 +139,16 @@ const ScreenController = () => {
                 }
 
                 projectCard.appendChild(projectForm);
+            })
+
+            title.addEventListener('click', () => {
+                document.querySelector('button.back-button').disabled = false;
+                document.querySelector('.content-name').textContent = projectManager.getProjectList()[index].getProjectName();
+                document.querySelector('header > ul > li > button').classList.add('create-todo');
+                document.querySelector('header > ul > li > button').classList.remove('create-project');
+                document.querySelector('button.create-todo').disabled = false;
+                clearScreen();
+                listTodoItems(index);
             })
         }
     }
@@ -196,25 +205,189 @@ const ScreenController = () => {
         })
     }
 
+    const listTodoItems = (projectId) => {
+        const todoContainer = document.querySelector('div.cards');
+
+        const todoList = projectManager.getProjectList()[projectId].getToDoList();
+        for (let index=0; index<todoList.length; index++) {
+            const todo = todoList[index];
+            const todoCard = document.createElement('div');
+            todoCard.classList.add('card');
+            todoCard.classList.add('todo-item');
+            todoContainer.appendChild(todoCard);
+
+            const title = document.createElement('h4');
+            title.textContent = todo.getName();
+            title.id = index;
+            todoCard.appendChild(title);
+
+            const description = document.createElement('p');
+            description.textContent = todo.getDescription();
+            todoCard.appendChild(description);
+
+            const dueDate = document.createElement('p');
+            const hoursDiff = Math.round((todo.getDuedate() - new Date())/36e5);
+            if (hoursDiff >= 0) {
+                dueDate.textContent = `${hoursDiff} hours left`;
+            }
+            else {
+                dueDate.textContent = `${hoursDiff * -1} hours ago`;
+            }
+            todoCard.appendChild(dueDate);
+
+            const priority = document.createElement('p');
+            priority.textContent = '!'.repeat(5 - todo.getPriority());
+            priority.classList.add('priority');
+            todoCard.appendChild(priority);
+
+            const buttonList = document.createElement('ul');
+            buttonList.classList.add('card-edit');
+            todoCard.appendChild(buttonList);
+
+            const edit = document.createElement('li');
+            buttonList.appendChild(edit);
+            const editButton = document.createElement('button');
+            editButton.innerHTML = `<?xml version="1.0" encoding="utf-8"?>
+                                <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20.1498 7.93997L8.27978 19.81C7.21978 20.88 4.04977 21.3699 3.32977 20.6599C2.60977 19.9499 3.11978 16.78 4.17978 15.71L16.0498 3.84C16.5979 3.31801 17.3283 3.03097 18.0851 3.04019C18.842 3.04942 19.5652 3.35418 20.1004 3.88938C20.6356 4.42457 20.9403 5.14781 20.9496 5.90463C20.9588 6.66146 20.6718 7.39189 20.1498 7.93997V7.93997Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>`;
+            edit.appendChild(editButton);
+
+            const deleteItem = document.createElement('li');
+            buttonList.appendChild(deleteItem);
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = `<?xml version="1.0" encoding="utf-8"?>
+                                <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 7H20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6 7V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>`;
+            deleteItem.appendChild(deleteButton);
+        }
+    }
+
+    const addTodo = (projectId) => {
+        const todoContainer = document.querySelector('div.cards');
+
+        const todoCard = document.createElement('div');
+        todoCard.classList.add('card');
+        todoCard.classList.add('todo-items');
+        todoContainer.appendChild(todoCard);
+
+        const todoForm = document.createElement('form');
+        todoCard.appendChild(todoForm);
+
+        const title = document.createElement('h4');
+        todoForm.appendChild(title);
+        const titleInput = document.createElement('input');
+        titleInput.name = 'todoName';
+        titleInput.id = 'todoName';
+        titleInput.type = 'text';
+        titleInput.placeholder = 'NAME of To-Do item'
+        titleInput.required = true;
+        title.appendChild(titleInput);
+        
+        const description = document.createElement('p');
+        todoForm.appendChild(description);
+        const descriptionInput = document.createElement('input');
+        descriptionInput.name = 'todoDescription';
+        descriptionInput.id = 'todoDescription';
+        descriptionInput.type = 'text';
+        descriptionInput.placeholder = 'Description of your todo';
+        descriptionInput.required = true;
+        description.appendChild(descriptionInput);
+
+        const dueDate = document.createElement('p');
+        todoForm.appendChild(dueDate);
+        const dueDateInput = document.createElement('input');
+        dueDateInput.name = 'todoDueDate';
+        dueDateInput.id = 'todoDueDate';
+        dueDateInput.type = 'text';
+        dueDateInput.placeholder = 'Please fill Due Date';
+        dueDateInput.required = true;
+        dueDate.appendChild(dueDateInput);
+
+        const priority = document.createElement(p);
+        todoForm.appendChild(priority);
+        const priorityInput = document.createElement('input');
+        priorityInput.name = 'todoPriority';
+        priorityInput.id = 'todoPriority';
+        priorityInput.type = 'number';
+        priorityInput.placeholder = 'Please fill Priority';
+        priorityInput.required = true;
+        priorityInput.value = 3;
+        priorityInput.min = 0;
+        priorityInput.max = 5;
+        priorityInput.step = 1;
+        priority.appendChild(priorityInput);
+
+        const submitButton = document.createElement('button');
+        submitButton.type = 'submit';
+        submitButton.textContent = 'OK';
+        todoForm.appendChild(submitButton);
+
+        todoForm.addEventListener('submit', (e) => {
+            const formData = {
+                name: e.target.querySelector('#todoName').value,
+                description: e.target.querySelector('#todoDescription').value,
+                dueDate: e.target.querySelector('#todoDueDate').value,
+                priority: e.target.querySelector('#todoPriority').value,
+            };
+            console.log(formData);
+            // if(!projectManager.getProjectList()[projectId].addTodo(formData.name, formData.description, formData.dueDate, formData.priority)) {
+            //     alert('Sorry, Failed to add Todo');
+            // };
+            e.preventDefault();
+
+            clearScreen();
+            listTodoItems(projectId);
+            document.querySelector('button.create-todo').disabled = false;
+        })
+    }
+
 
     // Home
     document.querySelector('.logo').addEventListener('click', () => {
         document.querySelector('button.back-button').disabled = true;
 
-        const createButton = document.querySelector('header > ul > li > button');
-        for (const cls of createButton.classList) {
-            createButton.classList.remove(cls);
-        }
-        createButton.classList.add('create-project');
+        document.querySelector('.content-name').textContent = 'Project Folder';
+
+        document.querySelector('header > ul > li > button').classList.remove('create-todo');
+        document.querySelector('header > ul > li > button').classList.add('create-project');
         document.querySelector('button.create-project').disabled = false;
+        clearScreen();
         listProjectFolder();
     })
 
     // Create Project
-    document.querySelector('.create-project').addEventListener('click', (e) => {
-        document.querySelector('button.create-project').disabled = true;
-        addProject();
+    document.querySelector('.create-button').addEventListener('click', (e) => {
+        document.querySelector('button.create-button').disabled = true;
+        if( e.target.classList[1] === 'create-project') {
+            addProject();
+        }
+        else if (e.target.classList[1] === 'create-todo') {
+            addTodo(e.target.id);
+        }
     })
+
+    document.querySelector('.delete-button').addEventListener('click', () => {
+        const [category, index] = e.target.dataset.index.split('-');
+        console.log(e.target.dataset.index.split('-'));
+        if (category === 'project') {
+            projectManager.removeProject(index);
+        }
+        else if (category === 'todo') {
+projectManager.removeProject(index);
+        }
+        clearScreen();
+        document.querySelector('.logo').click();
+    })
+
+    // Back Button
+    document.querySelector('.back-button').addEventListener('click', (e) => {
+        document.querySelector('.logo').click();
+    })
+
 }
 
 ScreenController();
