@@ -17,3 +17,7 @@ To-Do:
 - [x] Every to-do item have a title, description, dueDate, priority
 - [x] List the To-Do List
 - [x] Able to create/delete the To-Do Items inidividually
+
+## Result
+![project-folder](./assets/project-folder.png)
+![todo-list](./assets/todo-pic.png)
